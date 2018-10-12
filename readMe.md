@@ -17,6 +17,10 @@ Read this markdown document before proceeding
 Make sure you have vue cli installed on your computer  
 The backend data routes are available on https://www.getpostman.com/collections/eb6afc1d750fe3078549
 
+When successfully run you should see the following screen
+
+<img src="https://raw.githubusercontent.com/Jeffrey-Kimani/todos-frontend/master/public/img/sample.png" alt="Sample Screen Image">
+
 ### Procedure to access the requests on Postman
 
 1. Click on the import button
