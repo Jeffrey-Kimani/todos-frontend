@@ -1,31 +1,125 @@
 <template>
   <div class="home">
-    <div class="alert alert-primary" role="alert">
-        A simple primary alert—check it out!
-    </div>
-    <div class="jumbotron">
-        <h1 class="display-4">Hello, world!</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-        <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-    </div>
+      <div class="titlebox">
+          <h1>Todos App</h1>
+      </div>
+      <div class="row justify-content-md-center">
+          <div class="col-12 col-md-11 col-lg-8">
+            <div class="input-group input-group-lg">
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    aria-label="Large" 
+                    aria-describedby="inputGroup-sizing-sm" 
+                    v-model="todo"
+                    @keyup.enter="createTodo">
+            </div>
+
+            <div class="todos-box">
+                <div class="todo-card" v-for="t in todos" :key="t._id">
+                    <div class="row justify-content-md-center">
+                        <div class="col-2 col-md-1">
+                            <button class="btn">
+                                <i class="fa fa-vector-square" v-show="!t.completed"></i>
+                                <i class="fa fa-check" v-show="t.completed"></i>
+                            </button>
+                        </div>
+                        <div class="col-12 col-md-10 col-lg-8">
+                            <div class="txt">
+                                {{t.text}}
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <button class="btn mr-2"><i class="fa fa-edit"></i></button>
+                            <button class="btn"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
   </div>
 </template>
 
 <script>
 export default {
-    mounted() {
-        this.$nextTick(() => {
-            $('.jumbotron').hide('slow')
-            $('.jumbotron').fadeIn('slow')
-        })
+    data () {
+        return {
+            todo: '',
+            todos: []
+        }
+    },
+    methods: {
+        createTodo () {
+            var _this = this
+
+            req.callServer({
+                data:{
+                    text: this.todo
+                },
+                meta_data:{},
+                command:"add_todo"
+            }).then(response => {
+                _this.fetchTodos()
+                _this.todo = ''
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        fetchTodos(){
+            var _this = this
+
+            req.callServer({
+                data:{},
+                meta_data:{},
+                command:"list_todo"
+            }).then(response => {
+                _this.todos = response.data.results
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    },
+    mounted(){
+        this.fetchTodos()
     }
 }
 </script>
 
 <style lang="less">
 .home{
-    
+    .todos-box{
+        margin-top: 40px;
+
+        .todo-card{
+            border: solid 2px #efefef;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: left !important;
+            margin: 6px 0;
+
+            .txt{
+                width: 100%;
+                font-weight: 600;
+                margin-top: 7px;
+                margin-left: 10px;
+            }
+        }
+    }
+    .titlebox{
+        width: 100vw;
+        padding: 30px 0;
+        background: #5B1647;
+        color: #fff;
+        text-align: center;
+        margin-bottom: 30px;
+
+        .h1{
+            font-size: 34px;
+        }
+    }
+    .row{
+        margin: 0;
+    }
 }
 </style>
